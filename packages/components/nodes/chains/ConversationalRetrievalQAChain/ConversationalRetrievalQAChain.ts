@@ -210,6 +210,15 @@ class ConversationalRetrievalQAChain_Chains implements INode {
             return res?.text
         } else {
             const res = await chain.call(obj, [loggerHandler, ...callbacks])
+            if (chainOption === 'refine') {
+                if (res.output_text && res.sourceDocuments) {
+                    return {
+                        text: res.output_text,
+                        sourceDocuments: res.sourceDocuments
+                    }
+                }
+                return res?.output_text
+            }
             if (res.text && res.sourceDocuments) return res
             return res?.text
         }
